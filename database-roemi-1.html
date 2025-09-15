@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Multi-Tab</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px auto;
+      max-width: 800px;
+      padding: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #ccc;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      background-color: #f1f1f1;
+      margin-right: 5px;
+    }
+
+    .tab.active {
+      background-color: #fff;
+      font-weight: bold;
+    }
+
+    .tab-content {
+      border: 1px solid #ccc;
+      padding: 20px;
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    form label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+
+    .radio-group label,
+    .peserta-list div {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .peserta-list input {
+      flex: 1;
+    }
+
+    .peserta-list button,
+    .event-list button {
+      margin-left: 10px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .add-btn {
+      margin-top: 10px;
+      padding: 6px 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Database Roemah Inspirit</h2>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab(0)">Individu</div>
+    <div class="tab" onclick="showTab(1)">Organisasi</div>
+    <div class="tab" onclick="showTab(2)">Komunitas</div>
+    <div class="tab" onclick="showTab(3)">Event</div>
+  </div>
+
+  <!-- Tab 1: Pendaftaran -->
+  <div class="tab-content active">
+    <form>
+      <label>Nama</label>
+      <input type="text" name="nama" required>
+
+      <label>Organisasi</label>
+      <input type="text" name="organisasi">
+
+      <label>Komunitas</label>
+      <input type="text" name="komunitas">
+
+      <label>No. Telepon</label>
+      <input type="tel" name="notelp">
+
+      <label>Email</label>
+      <input type="email" name="email">
+
+      <label>Alamat</label>
+      <textarea name="alamat" rows="2"></textarea>
+
+      <label>Expertise</label>
+      <textarea name="expertise" rows="2"></textarea>
+
+      <label>Concern</label>
+      <textarea name="concern" rows="2"></textarea>
+
+      <label>Consent to Publish</label>
+      <div class="radio-group">
+        <label><input type="radio" name="consent" value="ya" required> Ya</label>
+        <label><input type="radio" name="consent" value="tidak"> Tidak</label>
+      </div>
+
+      <label>Member WA Grup</label>
+      <div class="radio-group">
+        <label><input type="radio" name="wa_grup" value="ya" required> Ya</label>
+        <label><input type="radio" name="wa_grup" value="tidak"> Tidak</label>
+      </div>
+
+      <label>Event yang Pernah Dihadiri</label>
+      <div id="eventList">
+        <div>
+          <input type="text" name="event[]" placeholder="Nama event">
+          <button type="button" onclick="removeEvent(this)">Hapus</button>
+        </div>
+      </div>
+      <button type="button" class="add-btn" onclick="addEvent('eventList', 'event[]')">+ Tambah Event</button>
+
+      <button type="submit">Kirim</button>
+    </form>
+  </div>
+
+  <!-- Tab 2: Organisasi -->
+  <div class="tab-content">
+    <form>
+      <label>Nama Organisasi</label>
+      <input type="text" name="nama_organisasi" required>
+
+      <label>Alamat</label>
+      <textarea name="alamat" rows="2" required></textarea>
+
+      <label>Nomor Telepon</label>
+      <input type="tel" name="telepon">
+
+      <label>Kontak Person</label>
+      <input type="text" name="kontak_person">
+
+      <label>Concern pada Isu</label>
+      <textarea name="concern" rows="3" required></textarea>
+
+      <label>Event yang Pernah Dihadiri</label>
+      <div id="eventListOrg">
+        <div>
+          <input type="text" name="event_organisasi[]" placeholder="Nama event">
+          <button type="button" onclick="removeEvent(this)">Hapus</button>
+        </div>
+      </div>
+      <button type="button" class="add-btn" onclick="addEvent('eventListOrg', 'event_organisasi[]')">+ Tambah Event</button>
+
+      <button type="submit">Kirim</button>
+    </form>
+  </div>
+
+  <!-- Tab 3: Komunitas -->
+  <div class="tab-content">
+    <form>
+      <label>Nama Komunitas</label>
+      <input type="text" name="nama_komunitas" required>
+
+      <label>Alamat</label>
+      <textarea name="alamat" rows="2" required></textarea>
+
+      <label>Nomor Telepon</label>
+      <input type="tel" name="telepon">
+
+      <label>Kontak Person</label>
+      <input type="text" name="kontak_person">
+
+      <label>Concern pada Isu</label>
+      <textarea name="concern" rows="3" required></textarea>
+
+      <label>Event yang Pernah Dihadiri</label>
+      <div id="eventListKom">
+        <div>
+          <input type="text" name="event_komunitas[]" placeholder="Nama event">
+          <button type="button" onclick="removeEvent(this)">Hapus</button>
+        </div>
+      </div>
+      <button type="button" class="add-btn" onclick="addEvent('eventListKom', 'event_komunitas[]')">+ Tambah Event</button>
+
+      <button type="submit">Kirim</button>
+    </form>
+  </div>
+
+  <!-- Tab 4: Event -->
+  <div class="tab-content">
+    <form>
+      <label>Nama Event</label>
+      <input type="text" name="nama_event" required>
+
+      <label>Waktu Penyelenggaraan</label>
+      <input type="date" name="tanggal" required>
+
+      <label>Venue</label>
+      <input type="text" name="venue" required>
+
+      <label>Penanggung Jawab</label>
+      <input type="text" name="penanggung_jawab" required>
+
+      <label>Sponsor</label>
+      <input type="text" name="sponsor">
+
+      <label>List Peserta</label>
+      <div class="peserta-list" id="pesertaList">
+        <div>
+          <input type="text" name="peserta[]" placeholder="Nama peserta">
+          <button type="button" onclick="removePeserta(this)">Hapus</button>
+        </div>
+      </div>
+      <button type="button" class="add-btn" onclick="addPeserta()">+ Tambah Peserta</button>
+
+      <button type="submit">Kirim</button>
+    </form>
+  </div>
+
+  <script>
+    function showTab(index) {
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.tab-content');
+      tabs.forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+        contents[i].classList.toggle('active', i === index);
+      });
+    }
+
+    function addEvent(containerId, nameAttr) {
+      const container = document.getElementById(containerId);
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <input type="text" name="${nameAttr}" placeholder="Nama event">
+        <button type="button" onclick="removeEvent(this)">Hapus</button>
+      `;
+      container.appendChild(div);
+    }
+
+    function removeEvent(btn) {
+      btn.parentElement.remove();
+    }
+
+    function addPeserta() {
+      const container = document.getElementById('pesertaList');
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <input type="text" name="peserta[]" placeholder="Nama peserta">
+        <button type="button" onclick="removePeserta(this)">Hapus</button>
+      `;
+      container.appendChild(div);
+    }
+
+    function removePeserta(btn) {
+      btn.parentElement.remove();
+    }
+  </script>
+
+</body>
+</html>
