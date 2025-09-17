@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Form Input Event</title>
+<style>
+  :root { 
+    --primary1:#00B8D9; 
+    --primary2:#98DA43; 
+    --primary3:#E300B5; 
+    --secondary:#FF9900; 
+    --neutral-dark:#222640; 
+    --neutral-light:#FFFFFF; 
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif;background:var(--neutral-light);color:var(--neutral-dark)}
+  header{padding:24px 16px;text-align:center;background:var(--primary1);color:var(--neutral-light)}
+  header h1{margin:0;font-size:clamp(20px,3vw,28px)}
+  header p{margin:6px 0 0;color:var(--neutral-light)}
+  .container{max-width:1000px;margin:0 auto;padding:16px}
+  form{background:var(--neutral-light);border:2px solid var(--primary2);box-shadow:0 6px 20px rgba(34,38,64,.2);border-radius:16px;overflow:hidden}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+  .section{padding:20px;border-top:1px dashed #ddd}
+  .section:first-child{border-top:none}
+  h2{font-size:18px;margin:0 0 12px;color:var(--primary3)}
+  label{display:block;font-weight:600;margin:8px 0 6px;color:var(--neutral-dark)}
+  input, select, textarea{width:100%;padding:12px 14px;background:var(--neutral-light);border:1px solid #ccc;color:var(--neutral-dark);border-radius:10px;outline:none}
+  input:focus, select:focus, textarea:focus{border-color:var(--primary1);box-shadow:0 0 0 3px rgba(0,184,217,.25)}
+  .row-6{grid-column:span 6}
+  .row-4{grid-column:span 4}
+  .row-8{grid-column:span 8}
+  .row-12{grid-column:span 12}
+  .inline{display:flex;gap:10px;align-items:center}
+  .btn{appearance:none;border:1px solid var(--primary1);background:var(--primary1);color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600;transition:0.2s}
+  .btn:hover{background:var(--secondary);border-color:var(--secondary)}
+  .btn.ghost{background:transparent;color:var(--primary3);border:1px solid var(--primary3)}
+  .btn.ghost:hover{background:var(--primary3);color:#fff}
+  .stack{display:flex;flex-direction:column;gap:10px}
+  footer{padding:16px;background:var(--primary1);border-top:2px solid var(--primary2);text-align:center;color:var(--neutral-light)}
+  footer button{margin:0 6px}
+  @media (max-width:880px){.row-6,.row-4,.row-8{grid-column:span 12}}
+  .upload-box {
+    width: 250px;
+    height: 250px;
+    border: 2px dashed #999;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #666;
+    cursor: pointer;
+    transition: border-color 0.3s, color 0.3s;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+  }
+  .upload-box:hover { border-color: #555; color: #333; }
+  .upload-box input[type="file"] {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Form Input Event</h1>
+  <p>Isikan data lengkap untuk pendataan event/penyelenggaraan kegiatan.</p>
+</header>
+
+<div class="container">
+  <form id="formEvent" novalidate>
+
+    <!-- INFORMASI EVENT -->
+    <div class="section">
+      <h2>Informasi Event</h2>
+      <div class="grid">
+        <div class="row-12">
+          <label for="namaEvent">Nama Event</label>
+          <input id="namaEvent" name="namaEvent" required />
+        </div>
+        <div class="row-12">
+          <label for="deskripsi">Deskripsi</label>
+          <textarea id="deskripsi" name="deskripsi" rows="4"></textarea>
+        </div>
+        <div class="row-6">
+          <label>Upload Logo Event (Opsional)</label>
+          <div class="upload-box" id="uploadLogo">
+            Klik atau drag file di sini
+            <input type="file" id="logo" name="logo" accept="image/*">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WAKTU & TEMPAT -->
+    <div class="section">
+      <h2>Waktu & Tempat</h2>
+      <div class="grid">
+        <div class="row-6">
+          <label>Waktu Penyelenggaraan (Mulai)</label>
+          <input type="date" id="tanggalMulai" name="tanggalMulai" required>
+        </div>
+        <div class="row-6">
+          <label>Waktu Penyelenggaraan (Selesai)</label>
+          <input type="date" id="tanggalSelesai" name="tanggalSelesai" required>
+        </div>
+        <div class="row-12">
+          <label for="tempat">Tempat</label>
+          <input id="tempat" name="tempat" required />
+        </div>
+        <div class="row-6">
+          <label for="provinsi">Provinsi</label>
+          <select id="provinsi" name="provinsi" required>
+            <option value="">Memuat daftar provinsi…</option>
+          </select>
+          <div class="hint" id="provHint"></div>
+        </div>
+        <div class="row-6">
+          <label for="kabkota">Kabupaten/Kota</label>
+          <select id="kabkota" name="kabkota" required disabled>
+            <option value="">Pilih provinsi terlebih dahulu</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION -->
+    <div class="section">
+      <h2>Session</h2>
+      <div class="stack" id="sessionWrapper"></div>
+      <button class="btn" type="button" onclick="addSession()">+ Tambah Session</button>
+    </div>
+
+    <!-- PENANGGUNG JAWAB & SPONSOR -->
+    <div class="section">
+      <h2>Penanggung Jawab & Sponsor</h2>
+      <div class="grid">
+        <div class="row-6">
+          <label>Penanggung Jawab</label>
+          <div class="stack" id="pjWrapper"></div>
+          <button class="btn" type="button" onclick="addPJ()">+ Tambah Penanggung Jawab</button>
+        </div>
+        <div class="row-6">
+          <label>Sponsor / Kolaborasi</label>
+          <div class="stack" id="sponsorWrapper"></div>
+          <button class="btn" type="button" onclick="addSponsor()">+ Tambah Sponsor/Kolaborasi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESERTA -->
+    <div class="section">
+      <h2>Peserta</h2>
+      <div class="stack" id="pesertaWrapper"></div>
+      <button class="btn" type="button" onclick="addPeserta()">+ Tambah Peserta</button>
+    </div>
+
+    <!-- FILE PENDUKUNG -->
+    <div class="section">
+      <h2>File Pendukung</h2>
+      <div class="grid">
+        <div class="row-6">
+          <label for="filePendukung">Upload File Pendukung</label>
+          <input type="file" id="filePendukung" name="filePendukung" multiple>
+        </div>
+        <div class="row-6">
+          <label for="linkPendukung">Link File Pendukung</label>
+          <input id="linkPendukung" name="linkPendukung" placeholder="https://…">
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <footer>
+      <button class="btn" type="submit">Simpan</button>
+      <button class="btn ghost" type="reset">Reset</button>
+      <div id="status" class="hint" style="margin-top:8px"></div>
+    </footer>
+  </form>
+</div>
+
+<script>
+  // Preview Logo
+  const uploadLogo = document.getElementById('uploadLogo');
+  const inputLogo = document.getElementById('logo');
+  inputLogo.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        uploadLogo.style.backgroundImage = `url(${e.target.result})`;
+        uploadLogo.textContent = '';
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function makeRemovableInput(name, type="text", placeholder="") {
+    const wrap = document.createElement('div');
+    wrap.className = 'inline';
+    const input = document.createElement('input');
+    input.type = type; input.name = name; input.placeholder = placeholder;
+    const del = document.createElement('button');
+    del.type = 'button'; del.className = 'btn ghost'; del.textContent = 'Hapus';
+    del.onclick = () => wrap.remove();
+    wrap.appendChild(input); wrap.appendChild(del);
+    return wrap;
+  }
+
+  // Dynamic Session with time range
+  function addSession(){
+    const block = document.createElement('div');
+    block.className = 'grid';
+    block.style.border='1px dashed #ccc';
+    block.style.padding='10px';
+    block.innerHTML = `
+      <div class="row-4"><label>Nama Session</label><input name="sessionNama[]" required></div>
+      <div class="row-4"><label>Waktu Mulai</label><input type="datetime-local" name="sessionMulai[]" required></div>
+      <div class="row-4"><label>Waktu Selesai</label><input type="datetime-local" name="sessionSelesai[]" required></div>
+      <div class="row-12"><label>Tempat Session</label><input name="sessionTempat[]" required></div>
+    `;
+    const btn = document.createElement('button');
+    btn.type='button'; btn.className='btn ghost'; btn.textContent='Hapus Session';
+    btn.onclick = ()=>block.remove();
+    block.appendChild(btn);
+    document.getElementById('sessionWrapper').appendChild(block);
+  }
+
+  // Penanggung Jawab & Sponsor dynamic
+  function addPJ(){
+    document.getElementById('pjWrapper')
+      .appendChild(makeRemovableInput('penanggungJawab[]','text','Nama / lookup individu/crew'));
+  }
+  function addSponsor(){
+    document.getElementById('sponsorWrapper')
+      .appendChild(makeRemovableInput('sponsor[]','text','Nama Sponsor/Kolaborator'));
+  }
+
+  // Peserta dynamic
+  function addPeserta(){
+    document.getElementById('pesertaWrapper')
+      .appendChild(makeRemovableInput('peserta[]','text','Nama Peserta'));
+  }
+
+  // Load Provinsi & Kabupaten/Kota
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
+      .then(res => res.json())
+      .then(data => {
+        const prov = document.getElementById('provinsi');
+        prov.innerHTML = '<option value="">Pilih Provinsi</option>';
+        data.forEach(p => {
+          let opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = p.name;
+          prov.appendChild(opt);
+        });
+        document.getElementById('provHint').textContent = `Total provinsi: ${data.length}`;
+      });
+
+    document.getElementById('provinsi').addEventListener('change', (e) => {
+      const id = e.target.value;
+      const kab = document.getElementById('kabkota');
+      kab.innerHTML = '<option value="">Memuat data…</option>';
+      kab.disabled = true;
+      if(id){
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`)
+          .then(res => res.json())
+          .then(data => {
+            kab.innerHTML = '<option value="">Pilih Kabupaten/Kota</option>';
+            data.forEach(k => {
+              let opt = document.createElement('option');
+              opt.value = k.id;
+              opt.textContent = k.name;
+              kab.appendChild(opt);
+            });
+            kab.disabled = false;
+          });
+      } else {
+        kab.innerHTML = '<option value="">Pilih provinsi terlebih dahulu</option>';
+        kab.disabled = true;
+      }
+    });
+  });
+</script>
+</body>
+</html>
